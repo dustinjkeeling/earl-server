@@ -1,0 +1,11 @@
+{
+  "name": "Earl",
+  "subdomain": "dustinkeeling-siri",
+  "version": "0.8.1",
+  "dependencies": {
+    "socket.io": "*"
+  },
+  "scripts": {
+    "start": "node sioserver.js"
+  }
+}

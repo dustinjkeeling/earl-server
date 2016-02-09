@@ -1,0 +1,151 @@
+<html>
+  <head>
+    
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"> </script>
+    <script src="/socket.io/socket.io.js"> </script>
+    <link rel="stylesheet" type="text/css" href="/styles/style.css">
+
+  </head>
+  <body>
+
+    <form method="get" name="jarvisform" id="jarvisform" action=""  target="voiceframe">
+     <!--<input name="speechinput" id="speechinput" type="text" onFocus="submitandclear(this);" style="width:200px;" x-webkit-speech /> --> <!--input type="submit" value="ASK" /-->
+     <!-- <input name="speechinput" id="speechinput" type="text" onFocus="submitandclear(this);" style="width:300px;" /> -->
+        <input style="display: none;" name="speechinput"  id="speechinput" type="text" autocomplete="off" placeholder="Tell Me What To Do" style="width:300px;" onFocus="process();" x-webkit-speech /> <!-- onChange="process();"  add for phone -->
+        <img src="http://i.stack.imgur.com/cMK0k.jpg" alt="Smiley face" width="80" style="margin-top:70px; margin-left:120px; position:absolute;"  />
+        <input style="-webkit-transform: scale(8,8); opacity:.001; width:50px; border:none; margin-left:00px; margin-top:100px;"  onFocus="process();" name="speech" type="text" speech="speech"  x-webkit-speech="x-webkit-speech"  />
+ 
+    </form>
+</div>
+
+  </body>
+
+    <!-- <script src="/socket.io/socket.io.js"></script> -->
+    <script>
+        var socket = io.connect();
+
+        socket.on('speech', function (data) {
+            
+            console.log(data.text);
+            var sp = data.text.toString();
+            tts(sp);
+        });
+    </script>
+
+</html>     
+<script type="text/javascript"> 
+/*
+ * jQuery sound plugin (no flash)
+ * 
+ * port of script.aculo.us' sound.js (http://script.aculo.us), based on code by Jules Gravinese (http://www.webveteran.com/) 
+ * 
+ * Copyright (c) 2007 JÃ¶rn Zaefferer (http://bassistance.de) 
+ * 
+ * Licensed under the MIT license:
+ *   http://www.opensource.org/licenses/mit-license.php
+ */  
+
+ function process(){
+    
+    var data = document.jarvisform.speech.value;
+    console.log(data);
+    if(data != ''){
+        
+        socket.emit('ack', { command: 'Made it!' });
+        switch (data) 
+        {
+            case 'light on':
+                socket.emit('data', {data: data});
+                break;
+            case 'light off':
+                socket.emit('data', {data: data});
+                break;
+            case 'temperature':
+                socket.emit('data', {data: data});
+                break;
+            case 'house status':
+            case 'House status':
+                socket.emit('data', {data: data});
+                break;
+            case 'courtney keeling':
+            case 'Courtney Keeling':
+                socket.emit('data', {data: data});
+                break;
+            case 'beat box':
+            case 'Beat box':
+            case 'beatbox':
+                socket.emit('data', {data: data});
+            default:
+                socket.emit('data', {data: 'undefined'});
+                break;
+
+        }
+    
+    document.jarvisform.speech.value = '';
+    } 
+}
+
+
+function tts(text)
+{
+
+    var ttsurl = 'http://translate.google.com/translate_tts?tl=en&q=';
+    var url = ttsurl + text;
+    $.sound.play(url);
+
+
+}
+
+
+(function($) {
+
+$.sound = {
+    tracks: {},
+    enabled: true,
+    template: function(src) {
+        return '<embed style="height:0" loop="false" src="' + src + '" autostart="true" hidden="true"/>';
+    },
+    play: function(url, options){
+        if (!this.enabled)
+            return;
+        var settings = $.extend({
+            url: url,
+            timeout: 2000
+        }, options);
+
+        if (settings.track) {
+            if (this.tracks[settings.track]) {
+                var current = this.tracks[settings.track];
+                // TODO check when Stop is avaiable, certainly not on a jQuery object
+                current.Stop && current.Stop();
+                current.remove();  
+            }
+        }
+
+        var element = $.browser.msie
+            ? $('<bgsound/>').attr({
+                src: settings.url,
+                loop: 1,
+                autostart: true
+              })
+            : $(this.template(settings.url));
+
+        element.appendTo("body");
+
+        if (settings.track) {
+            this.tracks[settings.track] = element;
+        }
+
+        if(options){
+            setTimeout(function() {
+                element.remove();
+            }, options.timeout)
+        }
+
+        return element;
+    }
+};
+
+})(jQuery);
+
+</script>

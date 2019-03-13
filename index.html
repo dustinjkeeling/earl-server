@@ -8,9 +8,7 @@
   </head>
   <body>
 
-    <form method="get" name="jarvisform" id="jarvisform" action=""  target="voiceframe">
-     <!--<input name="speechinput" id="speechinput" type="text" onFocus="submitandclear(this);" style="width:200px;" x-webkit-speech /> --> <!--input type="submit" value="ASK" /-->
-     <!-- <input name="speechinput" id="speechinput" type="text" onFocus="submitandclear(this);" style="width:300px;" /> -->
+    <form method="get" name="Earlform" id="Earlform" action=""  target="voiceframe">
         <input style="display: none;" name="speechinput"  id="speechinput" type="text" autocomplete="off" placeholder="Tell Me What To Do" style="width:300px;" onFocus="process();" x-webkit-speech /> <!-- onChange="process();"  add for phone -->
         <img src="http://i.stack.imgur.com/cMK0k.jpg" alt="Smiley face" width="80" style="margin-top:70px; margin-left:120px; position:absolute;"  />
         <input style="-webkit-transform: scale(8,8); opacity:.001; width:50px; border:none; margin-left:00px; margin-top:100px;"  onFocus="process();" name="speech" type="text" speech="speech"  x-webkit-speech="x-webkit-speech"  />
@@ -19,8 +17,6 @@
 </div>
 
   </body>
-
-    <!-- <script src="/socket.io/socket.io.js"></script> -->
     <script>
         var socket = io.connect();
 
@@ -47,7 +43,7 @@
 
  function process(){
     
-    var data = document.jarvisform.speech.value;
+    var data = document.Earlform.speech.value.toLowerCase();
     console.log(data);
     if(data != ''){
         
@@ -64,36 +60,25 @@
                 socket.emit('data', {data: data});
                 break;
             case 'house status':
-            case 'House status':
                 socket.emit('data', {data: data});
                 break;
-            case 'courtney keeling':
-            case 'Courtney Keeling':
+            case 'garage status':
                 socket.emit('data', {data: data});
                 break;
-            case 'beat box':
-            case 'Beat box':
-            case 'beatbox':
-                socket.emit('data', {data: data});
             default:
                 socket.emit('data', {data: 'undefined'});
                 break;
-
         }
-    
-    document.jarvisform.speech.value = '';
+    document.Earlform.speech.value = '';
     } 
 }
 
 
 function tts(text)
 {
-
     var ttsurl = 'http://translate.google.com/translate_tts?tl=en&q=';
     var url = ttsurl + text;
     $.sound.play(url);
-
-
 }
 
 
